@@ -1,13 +1,15 @@
 #exponential decay fit example
 
 #create dummy data
-set.seed(123)
-ts <- c(1:100)
-exp_dec <- 1000*(.9^ts)
+#set.seed(123)
+#ts <- c(1:100)
+#exp_dec <- 1000*(.9^ts)
 
-exp_dec_err <- sapply(exp_dec, function(x) rnorm(1,x,.34*x))
+#exp_dec_err <- sapply(exp_dec, function(x) rnorm(1,x,.34*x))
 
-data <- data.frame(ts,exp_dec_err)
+ts <- DateOrder
+values <- Value
+data <- data.frame(ts,values)
 
 #prediction fuction 1 y = (a*(b^ts))
 
@@ -43,3 +45,37 @@ dataPred <- data
 dataPred$y1_hat <- y1_hat
 dataPred$y2_hat <- y2_hat
 dataPred
+
+###Linear Regression
+
+ts <- input1
+values <- input2
+
+fr <- function(x) {   
+  a <- x[1]
+  b <- x[2]
+  err <- values - (-1*(a*ts)+b)
+  sum(err^2) / length(err)
+}
+
+pars <- optim(c(100,10000),fr)
+
+output <- (-1*(pars$par[1]*ts)+pars$par[2])
+
+
+###Expontenial Decay Option
+ 
+ts <- input1
+values <- input2
+
+fr <- function(x) {   
+  a <- x[1]
+  b <- x[2]
+  err <- values - (a*(b^ts))
+  sum(err^2) / length(err)
+}
+
+pars <- optim(c(1000,.5),fr)
+
+output = pars$par[1]*(pars$par[2]^ts)
+
